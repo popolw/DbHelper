@@ -5,22 +5,22 @@ namespace DBHelper
 {
     public partial class DbHelper
     {
-        public object ExecuteNonQuery(string cmdText)
+        public int ExecuteNonQuery(string cmdText)
         {
             return ExecuteNonQuery(cmdText, CommandType.Text, CmdTimeOut, null, null);
         }
 
-        public object ExecuteNonQuery(string cmdText, CommandType cmdType)
+        public int ExecuteNonQuery(string cmdText, CommandType cmdType)
         {
             return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, null, null);
         }
 
-        public object ExecuteNonQuery(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
+        public int ExecuteNonQuery(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
         {
             return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, null, parameters);
         }
 
-        public object ExecuteNonQuery(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
+        public int ExecuteNonQuery(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
         {
             return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, trans, parameters);
         }
