@@ -10,6 +10,11 @@ namespace DBHelper
 
         internal DbProvider Provider { get; private set; }
 
+        public DbHelper(DbProvider provider)
+        {
+            this.Provider=provider;
+        }
+
         private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
         {
             IDbCommand cmd = null;
