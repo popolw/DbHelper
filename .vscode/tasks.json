@@ -5,9 +5,19 @@
     "tasks": [
         {
             "label": "build",
-            "command": "dotnet build",
-            "type": "shell",
-            "group": "build",
+            "command":"dotnet build ${workspaceFolder}/SRC/DBHelper/DBHelper.csproj /t:build",
+            "type":"shell",
+            "group":"build",
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "command":"dotnet build ${workspaceFolder}/SRC/DBHelper /t:clean",
+            "type":"shell",
+            "group":"build",
             "presentation": {
                 "reveal": "silent"
             },
