@@ -63,10 +63,10 @@ namespace DBHelper
                 foreach (var parameter in parameters)
                 {
                     var p = parameter;
-                    if (parameter.Value == null)
+                    if (p.Value == null)
                     {
                         //dbnull fix
-                        parameter.Value = DBNull.Value;
+                        p.Value = DBNull.Value;
                     }
                     if (parameter is DynamicParameter)
                     {
