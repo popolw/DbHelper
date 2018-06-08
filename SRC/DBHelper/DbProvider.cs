@@ -14,9 +14,10 @@ namespace DBHelper
 
         public string ProviderName { get; private set; }
 
-        public DbProvider(string name, string connectionString, string providerName,Func<DbProviderFactory> func)
+        public DbProvider(string name, string connectionString, string providerName,Func<string,DbProviderFactory> func)
         {
             if(func==null) throw new ArgumentNullException(nameof(func));
+            this.DbFactory = func(providerName);
             this.Name = name;
             this.ConnectionString = connectionString;
             this.ProviderName = providerName;

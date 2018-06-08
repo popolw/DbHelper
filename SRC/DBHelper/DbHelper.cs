@@ -29,7 +29,7 @@ namespace DBHelper
             }
             finally
             {
-                if (trans == null && cmd != null)
+                if (trans == null && close)
                 {
                     if (cmd.Connection != null && cmd.Connection.State == ConnectionState.Open)
                     {
@@ -55,7 +55,7 @@ namespace DBHelper
             if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
             cmd.CommandText = cmdText;
             cmd.CommandType = cmdType;
-            cmd.Transaction = transaction.DbTransaction;
+            cmd.Transaction = transaction?.DbTransaction;
             cmd.CommandTimeout = cmdTimeout;
             if (parameters != null)
             {
