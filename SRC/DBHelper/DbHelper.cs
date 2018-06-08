@@ -17,10 +17,12 @@ namespace DBHelper
 
         private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
         {
+            var current = AdoNetTransactionWrap.Current;
             IDbCommand cmd = null;
             try
             {
-                cmd = this.CreateCommand(cmdText, cmdType, cmdTimeout, trans, parameters);
+               
+                cmd = this.CreateCommand(cmdText, cmdType, cmdTimeout, current, parameters);
                 return func(cmd);
             }
             catch (Exception ex)
@@ -49,13 +51,13 @@ namespace DBHelper
             return connection;
         }
 
-        private IDbCommand CreateCommand(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope transaction, params IDataParameter[] parameters)
+        private IDbCommand CreateCommand(string cmdText, CommandType cmdType, int cmdTimeout, AdoNetTransaction transaction, params IDataParameter[] parameters)
         {
-            var cmd = transaction != null ? transaction.DbConnection.CreateCommand() : CreateConnection(this.Provider).CreateCommand();
+            var cmd = transaction != null ? transaction.Connection.CreateCommand() : CreateConnection(this.Provider).CreateCommand();
             if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
             cmd.CommandText = cmdText;
             cmd.CommandType = cmdType;
-            cmd.Transaction = transaction?.DbTransaction;
+            cmd.Transaction = transaction;
             cmd.CommandTimeout = cmdTimeout;
             if (parameters != null)
             {

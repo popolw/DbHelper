@@ -1,54 +1,73 @@
 using System;
 using System.Data;
+using System.Data.Common;
 
-namespace DBHelper
-{
-    public class DbTransactionScope : IDisposable
-    {
-        private DbTransactionScope _root;
-
-        /// <summary>
-        /// 事务是否完成(始终是为根事务)
-        /// </summary>
-        /// <returns>bool</returns>
-        public bool Completed{get=>this._root.Completed;private set=>this._root.Completed=value;}
-        public DbProvider Provider { get; private set; }
-        internal IDbConnection DbConnection{get;private set;}
-        internal IDbTransaction DbTransaction {get;private set; }
-        public DbTransactionScope(DbProvider provider)
-        {
-             this._root = this;
-             this.Provider=provider;
-             this.DbConnection = DbHelper.CreateConnection(provider);
-             this.DbTransaction = DbConnection.BeginTransaction(); 
+namespace DBHelper {
+    internal class AdoNetTransaction : DbTransaction, IDbTransaction {
+        private DbConnection _connection;
+        private DbTransaction _transaction;
+        public AdoNetTransaction (DbProvider provider) {
+            this._connection = (DbConnection) DbHelper.CreateConnection (provider);
+            this._transaction = this._connection.BeginTransaction ();
         }
 
-        public DbTransactionScope(DbTransactionScope scope)
-        {
-            this._root = scope._root;
-            this.Provider=scope.Provider;
-            this.DbTransaction=scope.DbTransaction;
-            this.DbConnection=this.DbTransaction.Connection;
+        public new DbConnection Connection { get => this.DbConnection; }
+        public override IsolationLevel IsolationLevel => this._transaction.IsolationLevel;
+
+        protected override DbConnection DbConnection => this._connection;
+
+        public override void Commit () {
+            this._transaction.Commit ();
         }
 
+        public override void Rollback () {
+            this._transaction.Rollback ();
+        }
 
-        public void Commit()
+        protected override void Dispose(bool disposing)
         {
-            if(this !=_root) return;
-            this.DbTransaction.Commit();
+            this._transaction.Dispose();
+        }
+    }
+
+    internal class AdoNetTransactionWrap {
+        [ThreadStatic]
+        private static AdoNetTransaction _current;
+        public static AdoNetTransaction Current { get => _current; set => _current = value; }
+    }
+
+    public class DbTransactionScope : IDisposable {
+
+        private bool _root;
+        private AdoNetTransaction _transaction;
+        public bool Completed { get; private set; }
+        public DbTransactionScope (DbProvider provider) 
+        {
+            this._transaction = AdoNetTransactionWrap.Current;
+            if (this._transaction == null)
+             {
+                this._root = true;
+                this._transaction = new AdoNetTransaction (provider);
+                AdoNetTransactionWrap.Current = this._transaction;
+            }
+        }
+
+        public void Commit () 
+        {
+            if (this.Completed || !this._root) return;
+            this._transaction.Commit ();
             this.Completed=true;
         }
 
-        public void Dispose()
+        public void Dispose () 
         {
-            if(this!=_root) return;
-            if(!this.Completed)
+            if (this._root && !this.Completed) 
             {
-               this.DbTransaction.Rollback();                 
+                this._transaction.Rollback ();
+                this._transaction.Dispose();
+                AdoNetTransactionWrap.Current=null;
             }
-            this.DbConnection.Close();
-            this.DbTransaction.Dispose();
-        }
 
+        }
     }
 }
