@@ -6,7 +6,12 @@ namespace DBHelper
     public class DbTransactionScope : IDisposable
     {
         private DbTransactionScope _root;
-        public bool Complete{get;private set;}
+
+        /// <summary>
+        /// 事务是否完成(始终是为根事务)
+        /// </summary>
+        /// <returns>bool</returns>
+        public bool Completed{get=>this._root.Completed;private set=>this._root.Completed=value;}
         public DbProvider Provider { get; private set; }
         internal IDbConnection DbConnection{get;private set;}
         internal IDbTransaction DbTransaction {get;private set; }
@@ -31,14 +36,13 @@ namespace DBHelper
         {
             if(this !=_root) return;
             this.DbTransaction.Commit();
-            this.Complete=true;
-            this.Dispose();
+            this.Completed=true;
         }
 
         public void Dispose()
         {
             if(this!=_root) return;
-            if(!this.Complete)
+            if(!this.Completed)
             {
                this.DbTransaction.Rollback();                 
             }
