@@ -12,7 +12,7 @@ namespace DBHelper
 
         public DbHelper(DbProvider provider)
         {
-            this.Provider=provider;
+            this.Provider = provider;
         }
 
         private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
@@ -62,19 +62,17 @@ namespace DBHelper
                 cmd.Parameters.Clear();
                 foreach (var parameter in parameters)
                 {
-                    if (parameter.Value != null && parameter.Value is DateTime) //2016-07-18
+                    var p = parameter;
+                    if (parameter.Value == null)
                     {
-                        if (parameter.DbType != DbType.DateTime)
-                            parameter.DbType = DbType.DateTime;
+                        //dbnull fix
+                        parameter.Value = DBNull.Value;
                     }
-                    //parameter.Value = ParseValue(parameter.Value);
                     if (parameter is DynamicParameter)
                     {
-                         cmd.Parameters.Add(((DynamicParameter)parameter).GetDataParameter(cmd));
-                    }else
-                    {
-                          cmd.Parameters.Add(parameter);   
+                       p = ((DynamicParameter)parameter).GetDataParameter(cmd);     
                     }
+                    cmd.Parameters.Add(p);
                 }
             }
             return cmd;

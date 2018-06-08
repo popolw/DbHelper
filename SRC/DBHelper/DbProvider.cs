@@ -1,3 +1,4 @@
+using System;
 using System.Data.Common;
 
 namespace DBHelper
@@ -13,8 +14,9 @@ namespace DBHelper
 
         public string ProviderName { get; private set; }
 
-        public DbProvider(string name, string connectionString, string providerName)
+        public DbProvider(string name, string connectionString, string providerName,Func<DbProviderFactory> func)
         {
+            if(func==null) throw new ArgumentNullException(nameof(func));
             this.Name = name;
             this.ConnectionString = connectionString;
             this.ProviderName = providerName;
