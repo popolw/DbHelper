@@ -3,29 +3,35 @@ using System.Data;
 using System.Data.Common;
 
 namespace DBHelper {
-    internal class AdoNetTransaction : DbTransaction, IDbTransaction {
-        private DbConnection _connection;
+    internal class AdoNetTransaction:DbTransaction  {
+
         private DbTransaction _transaction;
+
+        public IDbTransaction Current { get => this._transaction; }
+
         public AdoNetTransaction (DbProvider provider) {
-            this._connection = (DbConnection) DbHelper.CreateConnection (provider);
-            this._transaction = this._connection.BeginTransaction ();
+            this.Connection = (DbConnection) DbHelper.CreateConnection (provider);
+            this._transaction = this.Connection.BeginTransaction ();
         }
 
-        public new DbConnection Connection { get => this.DbConnection; }
-        public override IsolationLevel IsolationLevel => this._transaction.IsolationLevel;
 
-        protected override DbConnection DbConnection => this._connection;
+        public new  DbConnection Connection { get;private set; }
+        public  override IsolationLevel IsolationLevel => this._transaction.IsolationLevel;
 
-        public override void Commit () {
+        protected override DbConnection DbConnection => throw new NotImplementedException();
+
+        public override  void Commit () {
             this._transaction.Commit ();
         }
 
-        public override void Rollback () {
+        public override  void Rollback () {
             this._transaction.Rollback ();
         }
 
-        protected override void Dispose (bool disposing) {
-            this._transaction.Dispose ();
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            this._transaction.Dispose();
         }
     }
 
@@ -46,8 +52,6 @@ namespace DBHelper {
                 this._root = true;
                 this._transaction = new AdoNetTransaction (provider);
                 AdoNetTransactionWrap.Current = this._transaction;
-            } else {
-                this._transaction = AdoNetTransactionWrap.Current;
             }
         }
 

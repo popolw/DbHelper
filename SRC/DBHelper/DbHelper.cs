@@ -57,7 +57,7 @@ namespace DBHelper
             if (cmd.Connection.State != ConnectionState.Open) cmd.Connection.Open();
             cmd.CommandText = cmdText;
             cmd.CommandType = cmdType;
-            cmd.Transaction = transaction;
+            cmd.Transaction = transaction?.Current;
             cmd.CommandTimeout = cmdTimeout;
             if (parameters != null)
             {
