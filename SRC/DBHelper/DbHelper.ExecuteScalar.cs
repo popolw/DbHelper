@@ -7,27 +7,22 @@ namespace DBHelper
     {
         public object ExecuteScalar(string cmdText)
         {
-            return ExecuteScalar(cmdText, CommandType.Text, CmdTimeOut, null, null);
+            return ExecuteScalar(cmdText, CommandType.Text, CmdTimeOut, null);
         }
 
         public object ExecuteScalar(string cmdText, CommandType cmdType)
         {
-            return ExecuteScalar(cmdText, cmdType, CmdTimeOut, null, null);
-        }
-
-        public object ExecuteScalar(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
-        {
-            return ExecuteScalar(cmdText, cmdType, CmdTimeOut, null, parameters);
+            return ExecuteScalar(cmdText, cmdType, CmdTimeOut,null);
         }
 
         public object ExecuteScalar(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
         {
-            return ExecuteScalar(cmdText, cmdType, CmdTimeOut, trans, parameters);
+            return ExecuteScalar(cmdText, cmdType, CmdTimeOut, parameters);
         }
 
-        public object ExecuteScalar(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, params IDataParameter[] parameters)
+        public object ExecuteScalar(string cmdText, CommandType cmdType, int cmdTimeout, params IDataParameter[] parameters)
         {
-            return this.Excute(cmdText, cmdType, cmdTimeout, trans, parameters, true, cmd => cmd.ExecuteScalar());
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd => cmd.ExecuteScalar());
         }
     }
 }

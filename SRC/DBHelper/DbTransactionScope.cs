@@ -24,9 +24,8 @@ namespace DBHelper {
             this._transaction.Rollback ();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            this._transaction.Dispose();
+        protected override void Dispose (bool disposing) {
+            this._transaction.Dispose ();
         }
     }
 
@@ -41,31 +40,32 @@ namespace DBHelper {
         private bool _root;
         private AdoNetTransaction _transaction;
         public bool Completed { get; private set; }
-        public DbTransactionScope (DbProvider provider) 
-        {
+        public DbTransactionScope (DbProvider provider) {
             this._transaction = AdoNetTransactionWrap.Current;
-            if (this._transaction == null)
-             {
+            if (this._transaction == null) {
                 this._root = true;
                 this._transaction = new AdoNetTransaction (provider);
                 AdoNetTransactionWrap.Current = this._transaction;
+            } else {
+                this._transaction = AdoNetTransactionWrap.Current;
             }
         }
 
-        public void Commit () 
-        {
+        public void Commit () {
             if (this.Completed || !this._root) return;
             this._transaction.Commit ();
-            this.Completed=true;
+            this.Completed = true;
         }
 
-        public void Dispose () 
-        {
-            if (this._root && !this.Completed) 
-            {
-                this._transaction.Rollback ();
-                this._transaction.Dispose();
-                AdoNetTransactionWrap.Current=null;
+        public void Dispose () {
+
+            if (this._root) {
+                if (!this.Completed) {
+                    this._transaction.Rollback ();
+                }
+                this._transaction.Dispose ();
+                this._transaction = null;
+                AdoNetTransactionWrap.Current = null;
             }
 
         }

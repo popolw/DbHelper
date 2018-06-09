@@ -6,7 +6,7 @@ namespace DBHelper
 {
     public partial class DbHelper
     {
-        public static int CmdTimeOut = 30;
+        public int CmdTimeOut = 30;
 
         internal DbProvider Provider { get; private set; }
 
@@ -15,7 +15,7 @@ namespace DBHelper
             this.Provider = provider;
         }
 
-        private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
+        private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout,IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
         {
             var current = AdoNetTransactionWrap.Current;
             IDbCommand cmd = null;
@@ -31,7 +31,7 @@ namespace DBHelper
             }
             finally
             {
-                if (trans == null && close)
+                if (current == null && close)
                 {
                     if (cmd.Connection != null && cmd.Connection.State == ConnectionState.Open)
                     {

@@ -7,27 +7,22 @@ namespace DBHelper
     {
         public DataSet Query(string cmdText)
         {
-            return Query(cmdText, CommandType.Text, CmdTimeOut, null, null);
+            return Query(cmdText, CommandType.Text, CmdTimeOut,null);
         }
 
         public DataSet Query(string cmdText, CommandType cmdType)
         {
-            return Query(cmdText, cmdType, CmdTimeOut, null, null);
+            return Query(cmdText, cmdType, CmdTimeOut, null);
         }
 
         public DataSet Query(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
         {
-            return Query(cmdText, cmdType, CmdTimeOut, null, parameters);
+            return Query(cmdText, cmdType, CmdTimeOut, parameters);
         }
 
-        public DataSet Query(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
+        public DataSet Query(string cmdText, CommandType cmdType, int cmdTimeout,params IDataParameter[] parameters)
         {
-            return Query(cmdText, cmdType, CmdTimeOut, trans, parameters);
-        }
-
-        public DataSet Query(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, params IDataParameter[] parameters)
-        {
-            return this.Excute(cmdText, cmdType, cmdTimeout, trans, parameters, true, cmd =>
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd =>
              {
                  var adapter = this.Provider.DbFactory.CreateDataAdapter();
                  var set = new DataSet();

@@ -7,27 +7,22 @@ namespace DBHelper
     {
         public int ExecuteNonQuery(string cmdText)
         {
-            return ExecuteNonQuery(cmdText, CommandType.Text, CmdTimeOut, null, null);
+            return ExecuteNonQuery(cmdText, CommandType.Text, CmdTimeOut, null);
         }
 
         public int ExecuteNonQuery(string cmdText, CommandType cmdType)
         {
-            return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, null, null);
+            return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, null);
         }
 
         public int ExecuteNonQuery(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
         {
-            return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, null, parameters);
+            return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, parameters);
         }
 
-        public int ExecuteNonQuery(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
+        public int ExecuteNonQuery(string cmdText, CommandType cmdType, int cmdTimeout,params IDataParameter[] parameters)
         {
-            return ExecuteNonQuery(cmdText, cmdType, CmdTimeOut, trans, parameters);
-        }
-
-        public int ExecuteNonQuery(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, params IDataParameter[] parameters)
-        {
-            return this.Excute(cmdText, cmdType, cmdTimeout, trans, parameters, true, cmd => cmd.ExecuteNonQuery());
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd => cmd.ExecuteNonQuery());
         }
     }
 

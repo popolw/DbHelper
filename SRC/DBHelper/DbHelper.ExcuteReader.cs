@@ -7,27 +7,22 @@ namespace DBHelper
     {
         public IDataReader ExecuteReader(string cmdText)
         {
-            return ExecuteReader(cmdText, CommandType.Text, CmdTimeOut, null, null);
+            return ExecuteReader(cmdText, CommandType.Text, CmdTimeOut, null);
         }
 
         public IDataReader ExecuteReader(string cmdText, CommandType cmdType)
         {
-            return ExecuteReader(cmdText, cmdType, CmdTimeOut, null, null);
+            return ExecuteReader(cmdText, cmdType, CmdTimeOut, null);
         }
 
         public IDataReader ExecuteReader(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
         {
-            return ExecuteReader(cmdText, cmdType, CmdTimeOut, null, parameters);
+            return ExecuteReader(cmdText, cmdType, CmdTimeOut, parameters);
         }
 
-        public IDataReader ExecuteReader(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
+        public IDataReader ExecuteReader(string cmdText, CommandType cmdType, int cmdTimeout, params IDataParameter[] parameters)
         {
-            return ExecuteReader(cmdText, cmdType, CmdTimeOut, trans, parameters);
-        }
-
-        public IDataReader ExecuteReader(string cmdText, CommandType cmdType, int cmdTimeout, DbTransactionScope trans, params IDataParameter[] parameters)
-        {
-            return this.Excute(cmdText, cmdType, cmdTimeout, trans, parameters, false, cmd => (trans == null ? cmd.ExecuteReader(CommandBehavior.CloseConnection) : cmd.ExecuteReader()));
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, false, cmd => (cmd.Transaction == null ? cmd.ExecuteReader(CommandBehavior.CloseConnection) : cmd.ExecuteReader()));
         }
     }
 }
