@@ -1,17 +1,22 @@
 # DbHelper
-//begin 
-using DBHelper;
-using System;
-using System.Data.SQLite;
-using System.IO;
-using System.Text;
 
-namespace Test
+using DBHelper;<br/>
+using System;<br/>
+using System.Data.SQLite;<br/>
+using System.IO;<br/>
+using System.Text;<br/>
+
+
+namespace Test 
 {
-    class Program
+
+    class Program	
+	
     {
+    
         static void Main(string[] args)
         {
+        
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "db.data");
             var connection = $@"Data Source={path};Pooling=true;FailIfMissing=false";
             var provider = new DbProvider("C1", connection, "System.Data.SQLite", _ => SQLiteFactory.Instance);
@@ -46,7 +51,6 @@ namespace Test
             Console.WriteLine(sb.ToString());
             Console.Read();
         }
-
+       }
     }
-}
-// end of 
+
