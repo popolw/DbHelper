@@ -22,7 +22,7 @@ namespace DBHelper
 
         public DataSet Query(string cmdText, CommandType cmdType, int cmdTimeout,params IDataParameter[] parameters)
         {
-            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd =>
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, nameof(Query),cmd =>
              {
                  var adapter = this.Provider.DbFactory.CreateDataAdapter();
                  var set = new DataSet();

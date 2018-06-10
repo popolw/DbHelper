@@ -22,7 +22,7 @@ namespace DBHelper
 
         public object ExecuteScalar(string cmdText, CommandType cmdType, int cmdTimeout, params IDataParameter[] parameters)
         {
-            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd => cmd.ExecuteScalar());
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true,nameof(ExecuteScalar),cmd => cmd.ExecuteScalar());
         }
     }
 }

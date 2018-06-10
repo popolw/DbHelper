@@ -22,7 +22,7 @@ namespace DBHelper
 
         public IDataReader ExecuteReader(string cmdText, CommandType cmdType, int cmdTimeout, params IDataParameter[] parameters)
         {
-            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, false, cmd => (cmd.Transaction == null ? cmd.ExecuteReader(CommandBehavior.CloseConnection) : cmd.ExecuteReader()));
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, false, nameof(ExecuteReader),cmd => (cmd.Transaction == null ? cmd.ExecuteReader(CommandBehavior.CloseConnection) : cmd.ExecuteReader()));
         }
     }
 }

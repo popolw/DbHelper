@@ -14,7 +14,7 @@ namespace DBHelper
             this.Provider = provider;
         }
 
-        private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout,IDataParameter[] parameters, bool close, Func<IDbCommand, T> func)
+        private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout,IDataParameter[] parameters, bool close,string methodName, Func<IDbCommand, T> func)
         {
             var current = AdoNetTransactionWrap.Current;
             IDbCommand cmd = null;
@@ -26,7 +26,7 @@ namespace DBHelper
             }
             catch (Exception ex)
             {
-                throw new DbCommandExcuteException(cmdText, cmdType, parameters, func.Method, current?.Id, ex);
+                throw new DbCommandExcuteException(cmdText, cmdType, parameters,methodName, current?.Id, ex);
             }
             finally
             {

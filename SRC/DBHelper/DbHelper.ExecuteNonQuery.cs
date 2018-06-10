@@ -22,7 +22,7 @@ namespace DBHelper
 
         public int ExecuteNonQuery(string cmdText, CommandType cmdType, int cmdTimeout,params IDataParameter[] parameters)
         {
-            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true, cmd => cmd.ExecuteNonQuery());
+            return this.Excute(cmdText, cmdType, cmdTimeout, parameters, true,nameof(ExecuteNonQuery) ,cmd => cmd.ExecuteNonQuery());
         }
     }
 
