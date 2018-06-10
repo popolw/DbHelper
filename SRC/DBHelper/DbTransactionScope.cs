@@ -10,15 +10,17 @@ namespace DBHelper {
         public IDbTransaction Current { get => this._transaction; }
 
         public AdoNetTransaction (DbProvider provider) {
+            this.Id = Guid.NewGuid().ToString("N");
             this.Connection = (DbConnection) DbHelper.CreateConnection (provider);
             this._transaction = this.Connection.BeginTransaction ();
         }
 
+        public string Id { get;private set; }
 
         public new  DbConnection Connection { get;private set; }
         public  override IsolationLevel IsolationLevel => this._transaction.IsolationLevel;
 
-        protected override DbConnection DbConnection => throw new NotImplementedException();
+        protected override DbConnection DbConnection => this.Connection;
 
         public override  void Commit () {
             this._transaction.Commit ();

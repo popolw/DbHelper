@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.Common;
 
 namespace DBHelper
 {
@@ -27,7 +26,7 @@ namespace DBHelper
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new DbCommandExcuteException(cmdText, cmdType, parameters, func.Method, current?.Id, ex);
             }
             finally
             {
