@@ -19,6 +19,7 @@ namespace DBHelper
             this.CmdType = cmdType;
             this.Parameters = parameters;
             this.MethodName=methodName;
+            this.TransactionId=transid;
         }
     }
 }
