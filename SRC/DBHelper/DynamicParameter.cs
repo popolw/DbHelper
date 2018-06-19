@@ -9,7 +9,7 @@ namespace DBHelper
     /// </summary>
     public sealed class DynamicParameter : DbParameter,IDataParameter, IDbDataParameter
     {
-        private IDbDataParameter _parameter;
+        private DbParameter _parameter;
 
         /// <summary>
         /// 默认无参构造函数
@@ -112,12 +112,15 @@ namespace DBHelper
 
         public override void ResetDbType()
         {
-            
+            if(this._parameter!=null)
+            {
+                this._parameter.ResetDbType();
+            }  
         }
 
         internal IDataParameter GetDataParameter(IDbCommand cmd)
         {
-            _parameter = cmd.CreateParameter();
+            _parameter = (DbParameter)cmd.CreateParameter();
             _parameter.ParameterName = ParameterName.StartsWith("@") ? ParameterName : "@" + ParameterName;
           
             if (_value is Enum)

@@ -15,9 +15,9 @@ namespace DBHelper
             return ExecuteScalar(cmdText, cmdType, CmdTimeOut,null);
         }
 
-        public object ExecuteScalar(string cmdText, CommandType cmdType, DbTransactionScope trans, params IDataParameter[] parameters)
+        public object ExecuteScalar(string cmdText, CommandType cmdType, params IDataParameter[] parameters)
         {
-            return ExecuteScalar(cmdText, cmdType, CmdTimeOut, parameters);
+            return ExecuteScalar(cmdText,cmdType,CmdTimeOut,parameters);
         }
 
         public object ExecuteScalar(string cmdText, CommandType cmdType, int cmdTimeout, params IDataParameter[] parameters)
