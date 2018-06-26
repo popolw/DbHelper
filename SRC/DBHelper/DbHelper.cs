@@ -78,5 +78,46 @@ namespace DBHelper
             }
             return cmd;
         }
+
+
+
+        public IDataParameter CreateParameter(string parameterName,object value,DbType dbType)
+        {
+            return this.CreateParameter(parameterName,value,0,ParameterDirection.Input,dbType);
+        }
+
+        public IDataParameter CreateParameter(string parameterName,object value,ParameterDirection direction,DbType dbType)
+        {
+            return this.CreateParameter(parameterName,value,0,direction,dbType);
+        }
+
+
+        public IDataParameter CreateParameter(string parameterName,object value,int size,ParameterDirection direction,DbType dbType)
+        {
+            return this.CreateParameter(parameterName,value,size,dbType,direction,0,0);
+        }
+
+        /// <summary>
+        /// 创建一个数据库参数
+        /// </summary>
+        /// <param name="parameterName">参数名称</param>
+        /// <param name="value">参数值</param>
+        /// <param name="size">参数长度</param>
+        /// <param name="dbType">参数类型</param>
+        /// <param name="direction">参数方向</param>
+        /// <param name="precision">最大位数</param>
+        /// <param name="scale">小数位数</param>
+        /// <returns>IDataParameter</returns>
+        public IDataParameter CreateParameter(string parameterName,object value,int size,DbType dbType,ParameterDirection direction,byte precision,byte scale)
+        {
+            var parameter = this.Provider.DbFactory.CreateParameter();
+            parameter.ParameterName=parameterName;
+            parameter.Value=value;
+            parameter.DbType=dbType;
+            parameter.Scale=scale;
+            parameter.Precision=precision;
+            return parameter;
+        }
+
     }
 }
