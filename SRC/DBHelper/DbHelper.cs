@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
 
 namespace DBHelper
 {
@@ -12,6 +13,12 @@ namespace DBHelper
         public DbHelper(DbProvider provider)
         {
             this.Provider = provider;
+        }
+
+        public DbHelper(string name, string connectionString, string providerName,Func<string,DbProviderFactory> func)
+        :this(new DbProvider(name,connectionString,providerName,func))
+        {
+
         }
 
         private T Excute<T>(string cmdText, CommandType cmdType, int cmdTimeout,IDataParameter[] parameters, bool close,string methodName, Func<IDbCommand, T> func)
